@@ -980,3 +980,4 @@ kubectl get endpoints ml-inference -n mlops
 
 **Documento generado para el Proyecto Final de MLOps - Universidad Panamericana**
 
+
