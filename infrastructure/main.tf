@@ -104,3 +104,16 @@ module "rds" {
   environment        = var.environment
 }
 
+# ECR Module (Container Repositories)
+module "ecr" {
+  source = "./modules/ecr"
+
+  repository_names = [
+    "fhir-automapper/gateway-api",
+    "fhir-automapper/ml-inference",
+    "fhir-automapper/ml-trainer",
+    "fhir-automapper/frontend"
+  ]
+  environment = var.environment
+}
+

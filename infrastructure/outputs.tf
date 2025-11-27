@@ -65,3 +65,16 @@ output "rds_database_name" {
   value       = module.rds.database_name
 }
 
+# -----------------------------------------------------------------------------
+# ECR
+# -----------------------------------------------------------------------------
+output "ecr_repository_urls" {
+  description = "ECR repository URLs"
+  value       = module.ecr.repository_urls
+}
+
+output "aws_account_id" {
+  description = "AWS Account ID"
+  value       = data.aws_caller_identity.current.account_id
+}
+
