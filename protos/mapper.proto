@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package mlops.mapper;
+
+// Servicio principal de Mapeo (Inferencia)
+service MapperService {
+  // Recibe datos crudos y devuelve el recurso FHIR sugerido
+  rpc PredictMapping (PredictRequest) returns (PredictResponse);
+  
+  // Recarga la "Guía/Prompt" desde S3/MLflow sin reiniciar
+  rpc ReloadModel (ReloadRequest) returns (ReloadResponse);
+}
+
+// Servicio de Entrenamiento (Feedback Loop)
+service TrainerService {
+  // Recibe correcciones humanas para mejorar el modelo futuro
+  rpc SubmitFeedback (FeedbackRequest) returns (FeedbackResponse);
+  
+  // Dispara el proceso de re-entrenamiento (DSPy optimization)
+  rpc TriggerRetraining (RetrainRequest) returns (RetrainResponse);
+}
+
+// --- Mensajes ---
+
+message PredictRequest {
+  string raw_data_json = 1;     // El dato sucio (ej. {"Nom": "Juan", "Edad": 30})
+  string target_resource = 2;   // Qué queremos obtener (ej. "Patient", "Organization")
+}
+
+message PredictResponse {
+  string fhir_json = 1;         // El resultado FHIR generado
+  string jsonata_expression = 2; // La fórmula que usó (para debug)
+  float confidence = 3;         // Nivel de confianza (si aplica)
+  string model_version = 4;     // Versión del prompt usada
+}
+
+message FeedbackRequest {
+  string raw_data_json = 1;     // El original
+  string correct_fhir_json = 2; // Lo que debió ser (corregido por humano)
+  string target_resource = 3;
+}
+
+message FeedbackResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message ReloadRequest {
+  string model_uri = 1;
+}
+
+message ReloadResponse {
+  bool success = 1;
+  string active_version = 2;
+}
+
+message RetrainRequest {
+  bool force_full_retrain = 1;
+}
+
+message RetrainResponse {
+  string run_id = 1;
+  string status = 2;
+}
