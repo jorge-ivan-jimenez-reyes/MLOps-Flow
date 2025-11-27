@@ -14,6 +14,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy generated gRPC code
 COPY generated/ /app/generated/
 
+# Fix import path in generated grpc file
+RUN sed -i 's/import mapper_pb2 as mapper__pb2/from generated import mapper_pb2 as mapper__pb2/g' /app/generated/mapper_pb2_grpc.py
+
 # Copy application code
 COPY main.py .
 

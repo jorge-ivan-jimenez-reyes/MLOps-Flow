@@ -1,3 +1,4 @@
+# ML Trainer Service Dockerfile
 FROM python:3.11-slim
 
 WORKDIR /app
@@ -12,17 +13,22 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy generated gRPC code
-COPY generated/ /app/generated/
-
-# Fix import path in generated grpc file
-RUN sed -i 's/import mapper_pb2 as mapper__pb2/from generated import mapper_pb2 as mapper__pb2/g' /app/generated/mapper_pb2_grpc.py
+COPY generated/ ./generated/
 
 # Copy application code
-COPY *.py .
+COPY main.py .
 
-EXPOSE 50051 8001
+# Set Python path for imports
+ENV PYTHONPATH=/app
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:8001/ || exit 1
+# Expose ports
+EXPOSE 50052 8000
 
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/ || exit 1
+
+# Run the server
 CMD ["python", "main.py"]
+
+

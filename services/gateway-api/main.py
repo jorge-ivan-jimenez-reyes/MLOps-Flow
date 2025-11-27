@@ -104,6 +104,7 @@ def get_inference_stub():
 # Endpoints
 # -----------------------------------------------------------------------------
 @app.get("/health", response_model=HealthResponse)
+@app.get("/api/health", response_model=HealthResponse)
 async def health_check():
     """Health check endpoint."""
     inference_status = "unknown"
@@ -129,6 +130,7 @@ async def metrics():
     return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 @app.post("/predict", response_model=PredictResponse)
+@app.post("/api/predict", response_model=PredictResponse)
 async def predict(request: PredictRequest):
     """
     Transform raw data to FHIR format.
@@ -180,6 +182,7 @@ async def predict(request: PredictRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/predict/file")
+@app.post("/api/predict/file")
 async def predict_from_file(
     file: UploadFile = File(...),
     target_resource: str = Form(default="Patient")
@@ -219,6 +222,7 @@ async def predict_from_file(
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/feedback")
+@app.post("/api/feedback")
 async def submit_feedback(request: FeedbackRequest):
     """
     Submit feedback for model improvement.

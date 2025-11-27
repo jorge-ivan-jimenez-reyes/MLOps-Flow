@@ -166,6 +166,30 @@ class MapperServicer(mapper_pb2_grpc.MapperServiceServicer):
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return mapper_pb2.ReloadResponse(success=False)
+    
+    def SubmitFeedback(self, request, context):
+        """Forward feedback to trainer service (or store locally)."""
+        try:
+            logger.info(f"Received feedback for: {request.target_resource}")
+            
+            # For now, just acknowledge - in production, forward to ml-trainer
+            # or store in a queue/database
+            raw_data = json.loads(request.raw_data_json)
+            correct_fhir = json.loads(request.correct_fhir_json)
+            
+            logger.info(f"Feedback stored: {len(request.raw_data_json)} bytes")
+            
+            return mapper_pb2.FeedbackResponse(
+                success=True,
+                message=f"Feedback received for {request.target_resource}"
+            )
+            
+        except Exception as e:
+            logger.error(f"Feedback error: {str(e)}")
+            return mapper_pb2.FeedbackResponse(
+                success=False,
+                message=str(e)
+            )
 
 # -----------------------------------------------------------------------------
 # Server

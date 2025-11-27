@@ -23,3 +23,4 @@ output "password_ssm_parameter" {
   value       = aws_ssm_parameter.db_password.name
 }
 
+

@@ -45,6 +45,11 @@ class MapperServiceStub(object):
                 request_serializer=mapper__pb2.ReloadRequest.SerializeToString,
                 response_deserializer=mapper__pb2.ReloadResponse.FromString,
                 _registered_method=True)
+        self.SubmitFeedback = channel.unary_unary(
+                '/mlops.mapper.MapperService/SubmitFeedback',
+                request_serializer=mapper__pb2.FeedbackRequest.SerializeToString,
+                response_deserializer=mapper__pb2.FeedbackResponse.FromString,
+                _registered_method=True)
 
 
 class MapperServiceServicer(object):
@@ -65,6 +70,13 @@ class MapperServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def SubmitFeedback(self, request, context):
+        """Recibe correcciones humanas (forward al TrainerService)
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_MapperServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -77,6 +89,11 @@ def add_MapperServiceServicer_to_server(servicer, server):
                     servicer.ReloadModel,
                     request_deserializer=mapper__pb2.ReloadRequest.FromString,
                     response_serializer=mapper__pb2.ReloadResponse.SerializeToString,
+            ),
+            'SubmitFeedback': grpc.unary_unary_rpc_method_handler(
+                    servicer.SubmitFeedback,
+                    request_deserializer=mapper__pb2.FeedbackRequest.FromString,
+                    response_serializer=mapper__pb2.FeedbackResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -144,6 +161,33 @@ class MapperService(object):
             metadata,
             _registered_method=True)
 
+    @staticmethod
+    def SubmitFeedback(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/mlops.mapper.MapperService/SubmitFeedback',
+            mapper__pb2.FeedbackRequest.SerializeToString,
+            mapper__pb2.FeedbackResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
 
 class TrainerServiceStub(object):
     """Servicio de Entrenamiento (Feedback Loop)
@@ -160,10 +204,15 @@ class TrainerServiceStub(object):
                 request_serializer=mapper__pb2.FeedbackRequest.SerializeToString,
                 response_deserializer=mapper__pb2.FeedbackResponse.FromString,
                 _registered_method=True)
-        self.TriggerRetraining = channel.unary_unary(
-                '/mlops.mapper.TrainerService/TriggerRetraining',
-                request_serializer=mapper__pb2.RetrainRequest.SerializeToString,
-                response_deserializer=mapper__pb2.RetrainResponse.FromString,
+        self.TriggerTraining = channel.unary_unary(
+                '/mlops.mapper.TrainerService/TriggerTraining',
+                request_serializer=mapper__pb2.TrainingRequest.SerializeToString,
+                response_deserializer=mapper__pb2.TrainingResponse.FromString,
+                _registered_method=True)
+        self.GetTrainingStatus = channel.unary_unary(
+                '/mlops.mapper.TrainerService/GetTrainingStatus',
+                request_serializer=mapper__pb2.TrainingStatusRequest.SerializeToString,
+                response_deserializer=mapper__pb2.TrainingStatusResponse.FromString,
                 _registered_method=True)
 
 
@@ -178,8 +227,15 @@ class TrainerServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def TriggerRetraining(self, request, context):
+    def TriggerTraining(self, request, context):
         """Dispara el proceso de re-entrenamiento (DSPy optimization)
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetTrainingStatus(self, request, context):
+        """Obtiene el estado actual del entrenamiento
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -193,10 +249,15 @@ def add_TrainerServiceServicer_to_server(servicer, server):
                     request_deserializer=mapper__pb2.FeedbackRequest.FromString,
                     response_serializer=mapper__pb2.FeedbackResponse.SerializeToString,
             ),
-            'TriggerRetraining': grpc.unary_unary_rpc_method_handler(
-                    servicer.TriggerRetraining,
-                    request_deserializer=mapper__pb2.RetrainRequest.FromString,
-                    response_serializer=mapper__pb2.RetrainResponse.SerializeToString,
+            'TriggerTraining': grpc.unary_unary_rpc_method_handler(
+                    servicer.TriggerTraining,
+                    request_deserializer=mapper__pb2.TrainingRequest.FromString,
+                    response_serializer=mapper__pb2.TrainingResponse.SerializeToString,
+            ),
+            'GetTrainingStatus': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTrainingStatus,
+                    request_deserializer=mapper__pb2.TrainingStatusRequest.FromString,
+                    response_serializer=mapper__pb2.TrainingStatusResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -238,7 +299,7 @@ class TrainerService(object):
             _registered_method=True)
 
     @staticmethod
-    def TriggerRetraining(request,
+    def TriggerTraining(request,
             target,
             options=(),
             channel_credentials=None,
@@ -251,9 +312,36 @@ class TrainerService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/mlops.mapper.TrainerService/TriggerRetraining',
-            mapper__pb2.RetrainRequest.SerializeToString,
-            mapper__pb2.RetrainResponse.FromString,
+            '/mlops.mapper.TrainerService/TriggerTraining',
+            mapper__pb2.TrainingRequest.SerializeToString,
+            mapper__pb2.TrainingResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetTrainingStatus(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/mlops.mapper.TrainerService/GetTrainingStatus',
+            mapper__pb2.TrainingStatusRequest.SerializeToString,
+            mapper__pb2.TrainingStatusResponse.FromString,
             options,
             channel_credentials,
             insecure,

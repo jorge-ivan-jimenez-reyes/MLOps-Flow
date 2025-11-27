@@ -15,14 +15,22 @@ docker-login:
 
 .PHONY: build-gateway
 build-gateway:
-	docker build -t fhir-automapper/gateway-api:latest ./services/gateway-api
+	docker buildx build --platform linux/amd64 -t fhir-automapper/gateway-api:latest ./services/gateway-api --load
 
 .PHONY: build-inference
 build-inference:
-	docker build -t fhir-automapper/ml-inference:latest ./services/ml-inference
+	docker buildx build --platform linux/amd64 -t fhir-automapper/ml-inference:latest ./services/ml-inference --load
+
+.PHONY: build-frontend
+build-frontend:
+	docker buildx build --platform linux/amd64 -t fhir-automapper/frontend:latest ./services/frontend --load
+
+.PHONY: build-trainer
+build-trainer:
+	docker buildx build --platform linux/amd64 -t fhir-automapper/ml-trainer:latest ./services/ml-trainer --load
 
 .PHONY: build-all
-build-all: build-gateway build-inference
+build-all: build-gateway build-inference build-frontend build-trainer
 
 .PHONY: push-gateway
 push-gateway:
@@ -34,8 +42,18 @@ push-inference:
 	docker tag fhir-automapper/ml-inference:latest $(ECR_REGISTRY)/fhir-automapper/ml-inference:latest
 	docker push $(ECR_REGISTRY)/fhir-automapper/ml-inference:latest
 
+.PHONY: push-frontend
+push-frontend:
+	docker tag fhir-automapper/frontend:latest $(ECR_REGISTRY)/fhir-automapper/frontend:latest
+	docker push $(ECR_REGISTRY)/fhir-automapper/frontend:latest
+
+.PHONY: push-trainer
+push-trainer:
+	docker tag fhir-automapper/ml-trainer:latest $(ECR_REGISTRY)/fhir-automapper/ml-trainer:latest
+	docker push $(ECR_REGISTRY)/fhir-automapper/ml-trainer:latest
+
 .PHONY: push-all
-push-all: push-gateway push-inference
+push-all: push-gateway push-inference push-frontend push-trainer
 
 .PHONY: deploy-images
 deploy-images: docker-login build-all push-all
@@ -87,4 +105,8 @@ logs-gateway:
 .PHONY: logs-inference
 logs-inference:
 	kubectl logs -n mlops -l app=ml-inference -f
+
+.PHONY: logs-trainer
+logs-trainer:
+	kubectl logs -n mlops -l app=ml-trainer -f
 

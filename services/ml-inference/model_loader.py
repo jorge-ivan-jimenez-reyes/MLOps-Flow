@@ -90,3 +90,4 @@ class ModelLoader:
         """Get the current prompt configuration."""
         return self.current_config
 
+

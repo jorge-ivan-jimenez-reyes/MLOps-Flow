@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-trainer
+  namespace: mlops
+  labels:
+    app: ml-trainer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ml-trainer
+  template:
+    metadata:
+      labels:
+        app: ml-trainer
+    spec:
+      containers:
+        - name: ml-trainer
+          image: 177061867771.dkr.ecr.us-east-1.amazonaws.com/fhir-automapper/ml-trainer:latest
+          ports:
+            - containerPort: 50052
+              name: grpc
+            - containerPort: 8000
+              name: metrics
+          env:
+            - name: GRPC_PORT
+              value: "50052"
+            - name: MLFLOW_TRACKING_URI
+              value: "http://mlflow:5000"
+            - name: S3_BUCKET
+              value: "fhir-automapper-dev-mlflow-artifacts"
+            - name: MIN_FEEDBACK_FOR_TRAINING
+              value: "10"
+            - name: LOG_LEVEL
+              value: "INFO"
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openai-credentials
+                  key: api-key
+                  optional: true
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ml-trainer
+  namespace: mlops
+  labels:
+    app: ml-trainer
+spec:
+  selector:
+    app: ml-trainer
+  ports:
+    - name: grpc
+      port: 50052
+      targetPort: 50052
+    - name: metrics
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP
+
+

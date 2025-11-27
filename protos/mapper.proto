@@ -9,6 +9,9 @@ service MapperService {
   
   // Recarga la "Guía/Prompt" desde S3/MLflow sin reiniciar
   rpc ReloadModel (ReloadRequest) returns (ReloadResponse);
+  
+  // Recibe correcciones humanas (forward al TrainerService)
+  rpc SubmitFeedback (FeedbackRequest) returns (FeedbackResponse);
 }
 
 // Servicio de Entrenamiento (Feedback Loop)
@@ -17,7 +20,10 @@ service TrainerService {
   rpc SubmitFeedback (FeedbackRequest) returns (FeedbackResponse);
   
   // Dispara el proceso de re-entrenamiento (DSPy optimization)
-  rpc TriggerRetraining (RetrainRequest) returns (RetrainResponse);
+  rpc TriggerTraining (TrainingRequest) returns (TrainingResponse);
+  
+  // Obtiene el estado actual del entrenamiento
+  rpc GetTrainingStatus (TrainingStatusRequest) returns (TrainingStatusResponse);
 }
 
 // --- Mensajes ---
@@ -54,11 +60,21 @@ message ReloadResponse {
   string active_version = 2;
 }
 
-message RetrainRequest {
-  bool force_full_retrain = 1;
+message TrainingRequest {
+  bool force = 1;
 }
 
-message RetrainResponse {
-  string run_id = 1;
-  string status = 2;
+message TrainingResponse {
+  bool success = 1;
+  string message = 2;
+  string model_version = 3;
+}
+
+message TrainingStatusRequest {}
+
+message TrainingStatusResponse {
+  int32 feedback_count = 1;
+  int32 min_feedback_required = 2;
+  string current_model_version = 3;
+  bool ready_for_training = 4;
 }

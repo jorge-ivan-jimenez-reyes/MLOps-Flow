@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0cmapper.proto\x12\x0cmlops.mapper\"@\n\x0ePredictRequest\x12\x15\n\rraw_data_json\x18\x01 \x01(\t\x12\x17\n\x0ftarget_resource\x18\x02 \x01(\t\"k\n\x0fPredictResponse\x12\x11\n\tfhir_json\x18\x01 \x01(\t\x12\x1a\n\x12jsonata_expression\x18\x02 \x01(\t\x12\x12\n\nconfidence\x18\x03 \x01(\x02\x12\x15\n\rmodel_version\x18\x04 \x01(\t\"\\\n\x0f\x46\x65\x65\x64\x62\x61\x63kRequest\x12\x15\n\rraw_data_json\x18\x01 \x01(\t\x12\x19\n\x11\x63orrect_fhir_json\x18\x02 \x01(\t\x12\x17\n\x0ftarget_resource\x18\x03 \x01(\t\"4\n\x10\x46\x65\x65\x64\x62\x61\x63kResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"\"\n\rReloadRequest\x12\x11\n\tmodel_uri\x18\x01 \x01(\t\"9\n\x0eReloadResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x16\n\x0e\x61\x63tive_version\x18\x02 \x01(\t\",\n\x0eRetrainRequest\x12\x1a\n\x12\x66orce_full_retrain\x18\x01 \x01(\x08\"1\n\x0fRetrainResponse\x12\x0e\n\x06run_id\x18\x01 \x01(\t\x12\x0e\n\x06status\x18\x02 \x01(\t2\xa8\x01\n\rMapperService\x12M\n\x0ePredictMapping\x12\x1c.mlops.mapper.PredictRequest\x1a\x1d.mlops.mapper.PredictResponse\x12H\n\x0bReloadModel\x12\x1b.mlops.mapper.ReloadRequest\x1a\x1c.mlops.mapper.ReloadResponse2\xb3\x01\n\x0eTrainerService\x12O\n\x0eSubmitFeedback\x12\x1d.mlops.mapper.FeedbackRequest\x1a\x1e.mlops.mapper.FeedbackResponse\x12P\n\x11TriggerRetraining\x12\x1c.mlops.mapper.RetrainRequest\x1a\x1d.mlops.mapper.RetrainResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0cmapper.proto\x12\x0cmlops.mapper\"@\n\x0ePredictRequest\x12\x15\n\rraw_data_json\x18\x01 \x01(\t\x12\x17\n\x0ftarget_resource\x18\x02 \x01(\t\"k\n\x0fPredictResponse\x12\x11\n\tfhir_json\x18\x01 \x01(\t\x12\x1a\n\x12jsonata_expression\x18\x02 \x01(\t\x12\x12\n\nconfidence\x18\x03 \x01(\x02\x12\x15\n\rmodel_version\x18\x04 \x01(\t\"\\\n\x0f\x46\x65\x65\x64\x62\x61\x63kRequest\x12\x15\n\rraw_data_json\x18\x01 \x01(\t\x12\x19\n\x11\x63orrect_fhir_json\x18\x02 \x01(\t\x12\x17\n\x0ftarget_resource\x18\x03 \x01(\t\"4\n\x10\x46\x65\x65\x64\x62\x61\x63kResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"\"\n\rReloadRequest\x12\x11\n\tmodel_uri\x18\x01 \x01(\t\"9\n\x0eReloadResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x16\n\x0e\x61\x63tive_version\x18\x02 \x01(\t\" \n\x0fTrainingRequest\x12\r\n\x05\x66orce\x18\x01 \x01(\x08\"K\n\x10TrainingResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\x12\x15\n\rmodel_version\x18\x03 \x01(\t\"\x17\n\x15TrainingStatusRequest\"\x8a\x01\n\x16TrainingStatusResponse\x12\x16\n\x0e\x66\x65\x65\x64\x62\x61\x63k_count\x18\x01 \x01(\x05\x12\x1d\n\x15min_feedback_required\x18\x02 \x01(\x05\x12\x1d\n\x15\x63urrent_model_version\x18\x03 \x01(\t\x12\x1a\n\x12ready_for_training\x18\x04 \x01(\x08\x32\xf9\x01\n\rMapperService\x12M\n\x0ePredictMapping\x12\x1c.mlops.mapper.PredictRequest\x1a\x1d.mlops.mapper.PredictResponse\x12H\n\x0bReloadModel\x12\x1b.mlops.mapper.ReloadRequest\x1a\x1c.mlops.mapper.ReloadResponse\x12O\n\x0eSubmitFeedback\x12\x1d.mlops.mapper.FeedbackRequest\x1a\x1e.mlops.mapper.FeedbackResponse2\x93\x02\n\x0eTrainerService\x12O\n\x0eSubmitFeedback\x12\x1d.mlops.mapper.FeedbackRequest\x1a\x1e.mlops.mapper.FeedbackResponse\x12P\n\x0fTriggerTraining\x12\x1d.mlops.mapper.TrainingRequest\x1a\x1e.mlops.mapper.TrainingResponse\x12^\n\x11GetTrainingStatus\x12#.mlops.mapper.TrainingStatusRequest\x1a$.mlops.mapper.TrainingStatusResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -43,12 +43,16 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_RELOADREQUEST']._serialized_end=387
   _globals['_RELOADRESPONSE']._serialized_start=389
   _globals['_RELOADRESPONSE']._serialized_end=446
-  _globals['_RETRAINREQUEST']._serialized_start=448
-  _globals['_RETRAINREQUEST']._serialized_end=492
-  _globals['_RETRAINRESPONSE']._serialized_start=494
-  _globals['_RETRAINRESPONSE']._serialized_end=543
-  _globals['_MAPPERSERVICE']._serialized_start=546
-  _globals['_MAPPERSERVICE']._serialized_end=714
-  _globals['_TRAINERSERVICE']._serialized_start=717
-  _globals['_TRAINERSERVICE']._serialized_end=896
+  _globals['_TRAININGREQUEST']._serialized_start=448
+  _globals['_TRAININGREQUEST']._serialized_end=480
+  _globals['_TRAININGRESPONSE']._serialized_start=482
+  _globals['_TRAININGRESPONSE']._serialized_end=557
+  _globals['_TRAININGSTATUSREQUEST']._serialized_start=559
+  _globals['_TRAININGSTATUSREQUEST']._serialized_end=582
+  _globals['_TRAININGSTATUSRESPONSE']._serialized_start=585
+  _globals['_TRAININGSTATUSRESPONSE']._serialized_end=723
+  _globals['_MAPPERSERVICE']._serialized_start=726
+  _globals['_MAPPERSERVICE']._serialized_end=975
+  _globals['_TRAINERSERVICE']._serialized_start=978
+  _globals['_TRAINERSERVICE']._serialized_end=1253
 # @@protoc_insertion_point(module_scope)
